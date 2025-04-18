@@ -1,3 +1,4 @@
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar_type.dart';
 import 'package:flutter/material.dart';
 import 'package:universal_io/io.dart';
 
@@ -9,6 +10,7 @@ class NavBarItemWidget extends StatelessWidget {
   final Widget child;
   final String? label;
   final TextStyle? labelStyle;
+  final CurvedNavigationBarType type;
 
   NavBarItemWidget({
     required this.onTap,
@@ -18,6 +20,7 @@ class NavBarItemWidget extends StatelessWidget {
     required this.child,
     this.label,
     this.labelStyle,
+    required this.type,
   });
 
   @override
@@ -63,7 +66,9 @@ class NavBarItemWidget extends StatelessWidget {
     return Transform.translate(
       offset: Offset(
         0,
-        difference < 1.0 / length ? verticalAlignment * 40 : 0,
+        difference < 1.0 / length
+            ? verticalAlignment * (type.isInwards ? 40 : -20)
+            : 0,
       ),
       child: Opacity(
         opacity: difference < 1.0 / length * 0.99 ? opacity : 1.0,

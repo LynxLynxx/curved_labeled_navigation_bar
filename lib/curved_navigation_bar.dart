@@ -1,3 +1,4 @@
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar_type.dart';
 import 'package:universal_io/io.dart';
 import 'dart:math';
 
@@ -27,6 +28,10 @@ class CurvedNavigationBar extends StatefulWidget {
   /// The color of [CurvedNavigationBar]'s background, default Colors.blueAccent.
   final Color backgroundColor;
 
+  final Color? selectedIconColor;
+
+  final Color? unselectedIconColor;
+
   /// Called when one of the [items] is tapped.
   final ValueChanged<int>? onTap;
 
@@ -53,6 +58,8 @@ class CurvedNavigationBar extends StatefulWidget {
   /// Check if [CurvedNavigationBar] has label.
   final bool hasLabel;
 
+  final CurvedNavigationBarType type;
+
   CurvedNavigationBar({
     Key? key,
     required this.items,
@@ -66,7 +73,10 @@ class CurvedNavigationBar extends StatefulWidget {
     this.animationDuration = const Duration(milliseconds: 600),
     this.iconPadding = 12.0,
     this.maxWidth,
+    this.selectedIconColor,
+    this.unselectedIconColor,
     double? height,
+    this.type = CurvedNavigationBarType.inwards,
   })  : letIndexChange = letIndexChange ?? ((_) => true),
         assert(items.isNotEmpty),
         assert(0 <= index && index < items.length),
@@ -84,7 +94,7 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
   late double _startingPos;
   late int _endingIndex;
   late double _pos;
-  late Widget _icon;
+  late IconData _icon;
   late AnimationController _animationController;
   late int _length;
   double _buttonHide = 0;
@@ -106,8 +116,10 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
         if ((endingPos - _pos).abs() < (_startingPos - _pos).abs()) {
           _icon = widget.items[_endingIndex].child;
         }
-        _buttonHide =
-            (1 - ((middle - _pos) / (_startingPos - middle)).abs()).abs();
+        if (widget.type == CurvedNavigationBarType.inwards) {
+          _buttonHide =
+              (1 - ((middle - _pos) / (_startingPos - middle)).abs()).abs();
+        }
       });
     });
   }
@@ -150,7 +162,6 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
                 ? Alignment.bottomLeft
                 : Alignment.bottomRight,
             child: Container(
-              color: widget.backgroundColor,
               width: maxWidth,
               child: ClipRect(
                 clipper: NavCustomClipper(
@@ -160,6 +171,23 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
                   clipBehavior: Clip.none,
                   alignment: Alignment.bottomCenter,
                   children: <Widget>[
+                    // Background
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: CustomPaint(
+                        painter: NavCustomPainter(
+                          startingLoc: _pos,
+                          itemsLength: _length,
+                          color: widget.color,
+                          textDirection: Directionality.of(context),
+                          hasLabel: widget.hasLabel,
+                          type: widget.type,
+                        ),
+                        child: Container(height: widget.height),
+                      ),
+                    ),
                     Positioned(
                       bottom: widget.height - 105.0,
                       left: textDirection == TextDirection.rtl
@@ -177,28 +205,16 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
                             type: MaterialType.circle,
                             child: Padding(
                               padding: EdgeInsets.all(widget.iconPadding),
-                              child: _icon,
+                              child: Icon(
+                                _icon,
+                                color: widget.selectedIconColor,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                    // Background
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: CustomPaint(
-                        painter: NavCustomPainter(
-                          startingLoc: _pos,
-                          itemsLength: _length,
-                          color: widget.color,
-                          textDirection: Directionality.of(context),
-                          hasLabel: widget.hasLabel,
-                        ),
-                        child: Container(height: widget.height),
-                      ),
-                    ),
+
                     // Unselected buttons
                     Positioned(
                       left: 0,
@@ -213,7 +229,12 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
                               position: _pos,
                               length: _length,
                               index: widget.items.indexOf(item),
-                              child: Center(child: item.child),
+                              type: widget.type,
+                              child: Center(
+                                  child: Icon(
+                                item.child,
+                                color: widget.unselectedIconColor,
+                              )),
                               label: item.label,
                               labelStyle: item.labelStyle,
                             );
