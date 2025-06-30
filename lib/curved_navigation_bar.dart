@@ -231,7 +231,10 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
                               index: widget.items.indexOf(item),
                               type: widget.type,
                               child: Center(
-                                child: item.child,
+                                child: ColoredIconWrapper(
+                                  child: item.child,
+                                  color: widget.unselectedIconColor,
+                                ),
                               ),
                               label: item.label,
                               labelStyle: item.labelStyle,
