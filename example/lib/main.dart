@@ -29,20 +29,20 @@ class _BottomNavBarState extends State<BottomNavBar> {
         index: 0,
         items: [
           CurvedNavigationBarItem(
-              child: Icons.home_outlined,
+              child: const Icon(Icons.home_outlined),
               label: 'Home',
               labelStyle: _textStyle),
           CurvedNavigationBarItem(
-              child: Icons.chat_bubble_outline,
+              child: const Icon(Icons.chat_bubble_outline),
               label: 'Oferts',
               labelStyle: _textStyle),
           CurvedNavigationBarItem(
-            child: Icons.newspaper,
+            child: const Icon(Icons.newspaper),
             label: 'Profile',
             labelStyle: _textStyle,
           ),
           CurvedNavigationBarItem(
-            child: Icons.perm_identity,
+            child: const Icon(Icons.perm_identity),
             label: 'Cart',
             labelStyle: _textStyle,
           ),
@@ -62,22 +62,26 @@ class _BottomNavBarState extends State<BottomNavBar> {
         },
         letIndexChange: (index) => true,
       ),
-      body: Container(
-        color: Colors.blueAccent,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(_page.toString(), textScaler: const TextScaler.linear(10.0)),
-              ElevatedButton(
-                child: const Text('Go To Page of index 1'),
-                onPressed: () {
-                  final CurvedNavigationBarState? navBarState =
-                      _bottomNavigationKey.currentState;
-                  navBarState?.setPage(1);
-                },
-              )
-            ],
+      body: SingleChildScrollView(
+        child: Container(
+          color: Colors.blueAccent,
+          height: 1200,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(_page.toString(),
+                    textScaler: const TextScaler.linear(10.0)),
+                ElevatedButton(
+                  child: const Text('Go To Page of index 1'),
+                  onPressed: () {
+                    final CurvedNavigationBarState? navBarState =
+                        _bottomNavigationKey.currentState;
+                    navBarState?.setPage(1);
+                  },
+                )
+              ],
+            ),
           ),
         ),
       ),

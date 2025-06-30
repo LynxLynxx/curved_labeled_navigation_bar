@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 
+/// Example usage:
+/// CurvedNavigationBarItem(
+///   child: SvgPicture.asset('assets/icon.svg'),
+///   label: 'SVG',
+/// )
+/// CurvedNavigationBarItem(
+///   child: Icon(Icons.home),
+///   label: 'Home',
+/// )
+
 class CurvedNavigationBarItem {
-  /// Icon of [CurvedNavigationBarItem].
-  final IconData child;
+  /// The icon widget of [CurvedNavigationBarItem].
+  /// Can be an [Icon], [SvgPicture], [Image], etc.
+  final Widget child;
 
   /// Text of [CurvedNavigationBarItem].
   final String? label;

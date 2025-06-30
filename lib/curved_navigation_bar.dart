@@ -5,9 +5,9 @@ import 'dart:math';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:curved_labeled_navigation_bar/src/nav_bar_item_widget.dart';
 import 'package:curved_labeled_navigation_bar/src/nav_custom_clipper.dart';
+import 'package:curved_labeled_navigation_bar/src/nav_custom_painter.dart';
+import 'package:curved_labeled_navigation_bar/src/colored_icon_wrapper.dart';
 import 'package:flutter/material.dart';
-
-import 'src/nav_custom_painter.dart';
 
 typedef _LetIndexPage = bool Function(int value);
 
@@ -94,7 +94,7 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
   late double _startingPos;
   late int _endingIndex;
   late double _pos;
-  late IconData _icon;
+  late Widget _icon; // Now stores a Widget, not IconData
   late AnimationController _animationController;
   late int _length;
   double _buttonHide = 0;
@@ -205,8 +205,8 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
                             type: MaterialType.circle,
                             child: Padding(
                               padding: EdgeInsets.all(widget.iconPadding),
-                              child: Icon(
-                                _icon,
+                              child: ColoredIconWrapper(
+                                child: _icon,
                                 color: widget.selectedIconColor,
                               ),
                             ),
@@ -231,10 +231,8 @@ class CurvedNavigationBarState extends State<CurvedNavigationBar>
                               index: widget.items.indexOf(item),
                               type: widget.type,
                               child: Center(
-                                  child: Icon(
-                                item.child,
-                                color: widget.unselectedIconColor,
-                              )),
+                                child: item.child,
+                              ),
                               label: item.label,
                               labelStyle: item.labelStyle,
                             );
